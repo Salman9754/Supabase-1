@@ -27,20 +27,21 @@ async function signUp() {
       swal.close();
       console.log(data);
       setTimeout(() => {
-        myAlert('sucess', "Done", "Account Created");
+        myAlert("sucess", "Done", "Account Created");
       }, 500);
     }
   } catch (error) {
     console.log(error);
-  }
-  finally{
-    signUpEmail = ''
-    signUpPassword = ''
+  } finally {
+    signUpEmail = "";
+    signUpPassword = "";
   }
 }
 
 let signUpBtn = document.getElementById("signUpBtn");
-signUpBtn.addEventListener("click", signUp);
+if (signUpBtn) {
+  signUpBtn.addEventListener("click", signUp);
+}
 
 async function login() {
   let loginEmail = document.getElementById("loginEmail").value;
@@ -61,36 +62,30 @@ async function login() {
     if (data) {
       swal.close();
       setTimeout(() => {
-        myAlert("success", "Done", "Login Successful");
+       window.location.href = '/dashboard.html'
       }, 500);
-      console.log(data);
+     
     }
   } catch (error) {
     myAlert("error", "Oops...", error);
   }
-
 }
 let LoginBtn = document.getElementById("LoginBtn");
-LoginBtn.addEventListener("click", login);
+if (LoginBtn) {
+  LoginBtn.addEventListener("click", login);
+}
 
+async function logOut() {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    window.location.reload()
+  } catch (error) {
+    console.log(error);
+  }
+}
+let logOutBtn = document.getElementById("logout_btn");
+if (logOutBtn) {
+  logOutBtn.addEventListener("click", logOut);
+}
 
-// async function signInGoogle() {
-//   try {
-//     const { data, error } = await supabase.auth.signInWithOAuth({
-//       provider: 'google'
-//     })
-// if(error){
-//   console.log(error.message);
-//   return
-// }    
-// if(data){
-//   console.log(data);
-//   return
-// }
-//   } catch (error) {
-//     console.log(error);
-    
-//   }
-// }
-
-// let signUpGoogle = document.getElementById('signUpGoogle').addEventListener('click',signInGoogle)
