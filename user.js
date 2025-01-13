@@ -46,25 +46,31 @@ async function showData() {
     if (error) throw error;
   
     if (data) {
+      setTimeout(()=>{
+        swal.close()
+      },500)
         data.map((user)=> {
         userTableBody.innerHTML +=`
         <tr>
-                             <td scope="col">${user.first_name}</td>
-                             <td scope="col">${user.last_name}</td>
-                             <td scope="col">${user.company}</td>
-                             <td scope="col">${user.address}</td>
-                             <td scope="col">${user.email}</td>
-                             <td scope="col" class="text-danger">Delete</td>
+                             <td scope="col" class = "border">${user.first_name}</td>
+                             <td scope="col" class = "border">${user.last_name}</td>
+                             <td scope="col" class = "border">${user.company}</td>
+                             <td scope="col" class = "border">${user.address}</td>
+                             <td scope="col" class = "border">${user.email}</td>
+                             <td scope="col" class="text-danger border">Delete ${user.id} </td>
                            </tr>`
         return  
       })
     }
   } catch (error) {
-    console.log(error);
-  }
-  finally{
     swal.close()
+    setTimeout(()=>{
+      customAlert('error','Oops...',error.message)
+    },500)
+    console.log(error);
+   
   }
+
 }
 if(window.location.pathname === '/dashboard.html'){
     showData()

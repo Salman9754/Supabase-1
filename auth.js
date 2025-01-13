@@ -5,36 +5,46 @@ function myAlert(icon, title, text) {
     text: text,
   });
 }
+window.customAlert = myAlert;
+
+const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const passwordRegex =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
 async function signUp() {
-  let signUpEmail = document.getElementById("signupEmail").value;
-  let signUpPassword = document.getElementById("signupPassword").value;
+  let signUpEmail = document.getElementById("signupEmail");
+  let signUpPassword = document.getElementById("signupPassword");
+  if (emailRegex.test(signUpEmail.value)) {
+    if (passwordRegex.test(signUpPassword.value)) {
+      try {
+        swal.showLoading();
+        const { data, error } = await supabase.auth.signUp({
+          email: signUpEmail.value,
+          password: signUpPassword.value,
+        });
+        if (error) throw error;
 
-  try {
-    swal.showLoading();
-    const { data, error } = await supabase.auth.signUp({
-      email: signUpEmail,
-      password: signUpPassword,
-    });
-    if (error) {
-      swal.close();
-      setTimeout(() => {
-        myAlert("error", "Oops...", error.message || "Something went wrong");
-      }, 500);
-      return;
+        if (data) {
+          swal.close();
+          console.log(signUpEmail.value,signUpPassword.value);
+          
+          setTimeout(() => {
+            myAlert("success","Done","Account Created");
+          }, 500);
+         
+        }
+      } catch (error) {
+        swal.close();
+        console.log(error);
+        setTimeout(() => {
+          myAlert("error", "Oops...", error.message);
+        }, 500);
+      }
+    } else {
+      myAlert("error", "Oops...", "Choose a valid password");
     }
-    if (data) {
-      swal.close();
-      console.log(data);
-      setTimeout(() => {
-        myAlert("sucess", "Done", "Account Created");
-      }, 500);
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    signUpEmail = "";
-    signUpPassword = "";
+  } else {
+    myAlert("error", "Oops...", "Enter Valid email");
   }
 }
 
@@ -62,9 +72,8 @@ async function login() {
     if (data) {
       swal.close();
       setTimeout(() => {
-       window.location.href = '/dashboard.html'
+        window.location.href = "/dashboard.html";
       }, 500);
-     
     }
   } catch (error) {
     myAlert("error", "Oops...", error);
@@ -79,7 +88,7 @@ async function logOut() {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    window.location.reload()
+    window.location.reload();
   } catch (error) {
     console.log(error);
   }
@@ -88,4 +97,3 @@ let logOutBtn = document.getElementById("logout_btn");
 if (logOutBtn) {
   logOutBtn.addEventListener("click", logOut);
 }
-
