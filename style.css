@@ -11,7 +11,7 @@
 body {
     background-color: var(--background);
     font-family: "Inter", serif;
-}
+}  
 .main{
     height: 100vh;
 }

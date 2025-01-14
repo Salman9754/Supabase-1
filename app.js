@@ -12,7 +12,7 @@ async function checkSession() {
             window.location.href = '/dashboard.html'
         }
     }
-    if(!session){
+    if(session === null){
         if(!isAuth){
             window.location.href = '/login.html'
         }
@@ -21,4 +21,4 @@ async function checkSession() {
     console.log(error);
   }
 }
-window.onload = checkSession;
+checkSession()

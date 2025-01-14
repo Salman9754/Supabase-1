@@ -31,11 +31,10 @@ async function signUp() {
 
         if (data) {
           swal.close();
-          myAlert("success","Done","Account Created");
+          myAlert("success", "Done", "Account Created");
           setTimeout(() => {
-           window.location.href = '/login.html'
+            window.location.href = "/login.html";
           }, 2000);
-         
         }
       } catch (error) {
         swal.close();
@@ -91,9 +90,28 @@ let LoginBtn = document.getElementById("LoginBtn");
 if (LoginBtn) {
   LoginBtn.addEventListener("click", login);
 }
-
+async function signInWithGoogle() {
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) throw error;
+    if(data){
+      console.log(data);
+      
+    }
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+let signInGoogle = document.getElementById('signGoogle')
+if(signInGoogle){
+  signInGoogle.addEventListener('click',signInWithGoogle)
+}
 async function logOut() {
   try {
+    swal.showLoading();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     window.location.reload();

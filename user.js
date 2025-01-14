@@ -41,14 +41,10 @@ if (addDataBtn) {
 
 async function showData() {
   try {
-    swal.showLoading()
     const { data, error } = await supabase.from("users").select();
     if (error) throw error;
   
     if (data) {
-      setTimeout(()=>{
-        swal.close()
-      },500)
         data.map((user)=> {
         userTableBody.innerHTML +=`
         <tr>
@@ -63,7 +59,6 @@ async function showData() {
       })
     }
   } catch (error) {
-    swal.close()
     setTimeout(()=>{
       customAlert('error','Oops...',error.message)
     },500)
