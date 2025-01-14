@@ -14,6 +14,11 @@ const passwordRegex =
 async function signUp() {
   let signUpEmail = document.getElementById("signupEmail");
   let signUpPassword = document.getElementById("signupPassword");
+  if (signUpEmail.value === "" || signUpPassword.value === "") {
+    myAlert("error", "Oops...", "Fields cannot be empty");
+    return;
+  }
+
   if (emailRegex.test(signUpEmail.value)) {
     if (passwordRegex.test(signUpPassword.value)) {
       try {
@@ -26,11 +31,10 @@ async function signUp() {
 
         if (data) {
           swal.close();
-          console.log(signUpEmail.value,signUpPassword.value);
-          
+          myAlert("success","Done","Account Created");
           setTimeout(() => {
-            myAlert("success","Done","Account Created");
-          }, 500);
+           window.location.href = '/login.html'
+          }, 2000);
          
         }
       } catch (error) {
@@ -56,6 +60,10 @@ if (signUpBtn) {
 async function login() {
   let loginEmail = document.getElementById("loginEmail").value;
   let loginPassword = document.getElementById("loginPassword").value;
+  if (loginEmail === "" || loginPassword === "") {
+    myAlert("error", "Oops...", "Fields cannot be empty");
+    return;
+  }
   try {
     swal.showLoading();
     const { data, error } = await supabase.auth.signInWithPassword({

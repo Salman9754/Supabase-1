@@ -19,17 +19,19 @@
         <div class="form-container col-8" id="login-form">
             <h2 class="form-title">Log In</h2>
 
-            <div class="mb-3">
-                <label for="loginEmail" class="form-label">Email address</label>
+            <div class="my-4">
                 <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
             </div>
-            <div class="mb-3">
-                <label for="loginPassword" class="form-label">Password</label>
+            <div class="my-3">
                 <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password"
                     required>
             </div>
-           <a href="index.html"> <p class="text-primary">Dont Have a account SignUp?</p></a>
-            <button type="button" class="btn btn-primary w-100 mt-3" id="LoginBtn">Log In</button>
+           <a href="index.html"> Dont have an account SignUp?</a>
+           
+            <div class="mt-4 d-flex flex-column gap-2">
+                <button class=" py-2 google"><i class="fa-brands fa-google mx-1 fs-4"></i> Google</button>
+                <button type="button" class="btn w-100 " id="LoginBtn">Log In</button>
+               </div>
 
         </div>
 
@@ -43,6 +45,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/3a83dfd1d2.js" crossorigin="anonymous"></script>
     <script type="module" src="app.js"></script>
 
 </body>
