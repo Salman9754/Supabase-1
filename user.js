@@ -41,32 +41,75 @@ if (addDataBtn) {
 
 async function showData() {
   try {
+    swal.showLoading()
     const { data, error } = await supabase.from("users").select();
     if (error) throw error;
-  
+
     if (data) {
-        data.map((user)=> {
-        userTableBody.innerHTML +=`
+      userTableBody.innerHTML = ""
+      data.map((user) => {
+        userTableBody.innerHTML += `
         <tr>
                              <td scope="col" class = "border">${user.first_name}</td>
                              <td scope="col" class = "border">${user.last_name}</td>
                              <td scope="col" class = "border">${user.company}</td>
                              <td scope="col" class = "border">${user.address}</td>
                              <td scope="col" class = "border">${user.email}</td>
-                             <td scope="col" class="text-danger border">Delete ${user.id} </td>
-                           </tr>`
-        return  
-      })
+                             <td scope="col" class="border" on onclick="deleteUser(${user.id})"><i class="fa-solid fa-trash"></i></td>
+                           </tr>`;
+        return;
+      });
     }
   } catch (error) {
-    setTimeout(()=>{
-      customAlert('error','Oops...',error.message)
-    },500)
+    setTimeout(() => {
+      customAlert("error", "Oops...", error.message);
+    }, 500);
     console.log(error);
-   
   }
-
+  finally{
+    swal.close()
+  }
 }
-if(window.location.pathname === '/dashboard.html'){
-    showData()
+showData()
+window.deleteUser = deleteUser;
+async function deleteUser(userId) {
+  try {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: true,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const { data, error } = await supabase
+            .from("users")
+            .delete()
+            .eq("id", userId)
+            .select();
+          if (error) throw error;
+          if (data) {
+          }
+          swalWithBootstrapButtons.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+          });
+          showData()
+        }
+      });
+  } catch (error) {
+    console.log(error);
+  }
 }

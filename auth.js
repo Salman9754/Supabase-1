@@ -14,6 +14,7 @@ const passwordRegex =
 async function signUp() {
   let signUpEmail = document.getElementById("signupEmail");
   let signUpPassword = document.getElementById("signupPassword");
+  let signupName = document.getElementById('signupName')
   if (signUpEmail.value === "" || signUpPassword.value === "") {
     myAlert("error", "Oops...", "Fields cannot be empty");
     return;
@@ -30,11 +31,28 @@ async function signUp() {
         if (error) throw error;
 
         if (data) {
-          swal.close();
-          myAlert("success", "Done", "Account Created");
-          setTimeout(() => {
-            window.location.href = "/login.html";
-          }, 2000);
+          try {
+            const { data: UserData, error: UserError } = await supabase
+              .from('LoggedUsers')
+              .insert({
+                userId: data.user.id,
+                name: signupName.value,
+                email: signUpEmail.value
+
+              })
+              .select()
+            if (UserError) throw error
+            if (UserData) {
+              swal.close();
+              myAlert("success", "Done", "Account Created");
+              setTimeout(() => {
+                window.location.href = "/login.html";
+              }, 2000);
+            }
+          } catch (error) {
+            console.log(error);
+
+          }
         }
       } catch (error) {
         swal.close();
@@ -90,25 +108,25 @@ let LoginBtn = document.getElementById("LoginBtn");
 if (LoginBtn) {
   LoginBtn.addEventListener("click", login);
 }
-async function signInWithGoogle() {
-  try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-    if (error) throw error;
-    if(data){
-      console.log(data);
-      
-    }
-  } catch (error) {
-    console.log(error);
-    
-  }
-}
-let signInGoogle = document.getElementById('signGoogle')
-if(signInGoogle){
-  signInGoogle.addEventListener('click',signInWithGoogle)
-}
+// async function signInWithGoogle() {
+//   try {
+//     const { data, error } = await supabase.auth.signInWithOAuth({
+//       provider: "google",
+//     });
+//     if (error) throw error;
+//     if(data){
+//       console.log(data);
+
+//     }
+//   } catch (error) {
+//     console.log(error);
+
+//   }
+// }
+// let signInGoogle = document.getElementById('signGoogle')
+// if(signInGoogle){
+//   signInGoogle.addEventListener('click',signInWithGoogle)
+// }
 async function logOut() {
   try {
     swal.showLoading();
