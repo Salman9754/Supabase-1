@@ -7,9 +7,6 @@ let postsContainer = document.getElementById("posts-container");
 
 async function addPost() {
     let currentUser = JSON.parse(localStorage.getItem('currentUser'))
-    console.log(currentUser);
-    console.log(postFile.files.length);
-
     try {
         const { data, error } = await supabase
             .from('postsData')
@@ -17,11 +14,8 @@ async function addPost() {
             .select()
         if (error) throw error
         if (data) {
-            console.log(data);
             if (postFile.files.length > 0) {
                 let currentFile = postFile.files[0]
-                console.log(currentFile.name);
-
                 try {
                     const { data: postImgData, error: postImgError } = await supabase
                         .storage
@@ -32,7 +26,7 @@ async function addPost() {
                         })
                     if (postImgError) throw postImgError
                     if (postImgData) {
-                        console.log(postImgData);
+                        postImgPublicUrl(postImgData, data)
                     }
                 } catch (error) {
                     console.log(error)
@@ -44,5 +38,38 @@ async function addPost() {
         console.log(error);
     }
 
+}
+
+async function postImgPublicUrl(ImgData, postData) {
+    try {
+        const { data, error } = supabase
+            .storage
+            .from('posts')
+            .getPublicUrl(ImgData.path)
+        if (error) throw error
+        if (data) {
+            console.log(data.publicUrl);
+            try {
+                const { data: postUpdateData, error: postUpdateError } =
+                    await supabase
+                        .from("postsData")
+                        .update({ ImageUrl: data.publicUrl })
+                        .eq("id", postData[0].id)
+                        .select();
+                if (postUpdateError) throw postUpdateError
+                if (postUpdateData) {
+                    console.log(postUpdateData);
+                }
+            } catch (error) {
+                console.log(error);
+
+            }
+
+        }
+
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 postButton.addEventListener('click', addPost)
